@@ -2,10 +2,19 @@
  * 测试环境的配置内容
  */
 
-module.exports = {
-    env: 'test', //环境名称
-    port: 8888, //服务端口号
-    mongodb_url: '', //数据库地址
-    redis_url: '', //redis地址
-    redis_port: '' //redis端口号
+const config = {
+    // 启动端口
+    port: 8000,
+
+    // 数据库配置
+    database: {
+        env: "test",
+        DATABASE: 'tusou',
+        USERNAME: 'zj',
+        PASSWORD: '5261728911',
+        PORT: '3306',
+        HOST: 'localhost'
+    }
 }
+
+module.exports = config

@@ -1,53 +1,42 @@
 const Sequelize = require('sequelize')
-const Op = Sequelize.Op
 const config = require('../../config')
+const database = config.database;
 
-var sequelize = new Sequelize(config.DATABASE, config.USERNAME, config.PASSWORD, {
-    host: config.HOST,
+var sequelize = new Sequelize(database.DATABASE, database.USERNAME, database.PASSWORD, {
+    host: database.HOST,
     dialect: 'mysql',
     pool: {
         max: 5,
         min: 0,
         idle: 30000
-    },
-    operatorsAliases: {
-        $and: Op.and,
-        $or: Op.or,
-        $eq: Op.eq,
-        $gt: Op.gt,
-        $lt: Op.lt,
-        $lte: Op.lte,
-        $like: Op.like
     }
 });
 const User = sequelize.define('user', {
-    firstName: {
+    name: {
         type: Sequelize.STRING
     },
-    lastName: {
+    age: {
         type: Sequelize.STRING
     }
 });
 
 // force: true 如果表已经存在，将会丢弃表
-User.sync({
-    force: true
-}).then(() => {
-    // 表已创建
-    return User.create({
-        firstName: 'John',
-        lastName: 'Hancock'
-    });
-});
+// User.sync({
+//     force: true
+// }).then(() => {
+//     // 表已创建
+//     return User.create({
+//         name: 'tuza',
+//         age: '17'
+//     });
+// });
 //获取用户
 exports.getUser = async (ctx, next) => {
-    User.findAll().then(users => {
-        ctx.body = {
-            username: users.firstName,
-            age: 17
-        }
-    })
-    
+    var user = await User.findById("1")
+    ctx.body = {
+        name: user.name,
+        age: user.age
+    }
 }
 
 //用户注册

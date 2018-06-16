@@ -10,10 +10,10 @@ const config = {
   database: {
     env:"development",
     DATABASE: 'tusou',
-    USERNAME: 'root',
-    PASSWORD: '0713',
+    USERNAME: 'zjmm',
+    PASSWORD: '5.26172mds',
     PORT: '3306',
-    HOST: 'localhost'
+    HOST: '47.106.200.223'
   }
 }
 

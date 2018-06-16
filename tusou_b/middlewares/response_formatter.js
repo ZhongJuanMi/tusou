@@ -13,7 +13,7 @@ var response_formatter = (ctx) => {
     } else {
         ctx.body = {
             code: 0,
-            message: 'success'
+            message: 'null'
         }
     }
 }

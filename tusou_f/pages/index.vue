@@ -8,10 +8,9 @@
 <script>
 export default {
     async asyncData({ app }) {
-        let { data } = await app.$axios.get("api/users/getUser");
+        let { data } = await app.$axios.get("/api/users/getUser");
         return{
-            // name:data.data.username
-            name:1
+            name:data.data.name
         }
     }
 }
