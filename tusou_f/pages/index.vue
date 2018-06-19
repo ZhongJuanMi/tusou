@@ -35,6 +35,7 @@
 </template>
 <script>
 export default {
+    layout: 'common',
   // async asyncData({ app }) {
   //     let { data } = await app.$axios.get("/api/users/getUser");
   //     return{
@@ -65,7 +66,8 @@ export default {
     display: block;
     width: 100%;
     height: 0;
-    background: linear-gradient(45deg, #5bead5 0, #6267fc 100%);
+    background: linear-gradient(45deg, rgba(91, 234, 213, .9) 0, rgba(98, 103, 252, 0.9) 100%);
+    background-size: 100%;
     animation: down 0.8s ease-in-out 1s forwards;
   }
 }
