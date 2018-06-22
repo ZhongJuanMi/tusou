@@ -58,7 +58,8 @@ module.exports = {
   css: [
     // 项目中的 CSS 文件
     "~assets/css/reset.css",
-    "element-ui/lib/theme-chalk/index.css"
+    "element-ui/lib/theme-chalk/index.css",
+    "~assets/css/my_element.css",
   ],
   modules: ["@nuxtjs/axios"],
   axios: {
