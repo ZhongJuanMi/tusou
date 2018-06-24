@@ -2,11 +2,10 @@
     <div class="main">
         <header>
             <ul class="clearfix">
-                <li v-for="(item,index) in nav" :key="index" :data-val="item.value">
+                <li v-for="(item,index) in nav" :key="index">
                     <nuxt-link :to="item.link" class="nav">
                         {{item.key}}
                     </nuxt-link>
-
                 </li>
             </ul>
         </header>
@@ -19,12 +18,13 @@ export default {
     data() {
         return {
             nav: [{
+                key:"主页",
+                link:"/"
+            },{
                 key: "登录",
-                value: "log",
                 link: "/log"
             }, {
                 key: "注册",
-                value: "reg",
                 link: "/reg"
             }]
         }

@@ -1,6 +1,10 @@
 const Sequelize = require('sequelize')
 const config = require('../../config')
 const database = config.database;
+const Op = Sequelize.Op;
+const operatorsAliases = {
+    $name: Op.name
+}
 
 var sequelize = new Sequelize(database.DATABASE, database.USERNAME, database.PASSWORD, {
     host: database.HOST,
@@ -9,13 +13,14 @@ var sequelize = new Sequelize(database.DATABASE, database.USERNAME, database.PAS
         max: 5,
         min: 0,
         idle: 30000
-    }
+    },
+    operatorsAliases: operatorsAliases
 });
 const User = sequelize.define('user', {
     name: {
         type: Sequelize.STRING
     },
-    age: {
+    password: {
         type: Sequelize.STRING
     }
 });
@@ -27,19 +32,46 @@ const User = sequelize.define('user', {
 //     // 表已创建
 //     return User.create({
 //         name: 'tuza',
-//         age: '17'
+//         password: '5261728911'
 //     });
 // });
-//获取用户
-exports.getUser = async (ctx, next) => {
-    var user = await User.findById("1")
+
+// 校验用户是否已经注册
+exports.ifUser=async(ctx,next)=>{
+    var name=ctx.query.name
+    var result=await User.findOne({
+        where:{
+            name
+        }
+    });
+    ctx.body={
+        has:result?true:false
+    }
+}
+
+//用户登录
+exports.logUser = async (ctx, next) => {
+    var {
+        name,
+        password
+    } = ctx.request.body;
+    console.log(name,password)
+    var result = await User.findOne({
+        where: {
+            name,
+            password
+        }
+    });
     ctx.body = {
-        name: user.name,
-        age: user.age
+        has: result ? true : false
     }
 }
 
 //用户注册
 exports.registerUser = async (ctx, next) => {
-    console.log('registerUser', ctx.request.body);
+    var {name,password}=ctx.request.body;
+    await User.create({
+        name,
+        password
+    })
 }
