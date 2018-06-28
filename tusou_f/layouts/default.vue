@@ -1,9 +1,17 @@
 <template>
   <div>
-      
+    <zjHeader/>
     <nuxt/>
   </div>
 </template>
+<script>
+import zjHeader from '~/components/common/header'
+export default {
+    components:{
+        zjHeader
+    }
+}
+</script>
 
 <style>
 html {
