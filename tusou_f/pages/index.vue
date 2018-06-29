@@ -34,14 +34,27 @@
 
 </template>
 <script>
+import tkAxios from '~/plugins/tkAxios'
+// console.log('000', tkAxios)
 export default {
-  // async asyncData({ app }) {
-  //     let { data } = await app.$axios.get("/api/users/getUser");
-  //     return{
-  //         name:data.data.name
-  //     }
-  // }
-  mounted () { }
+  // async asyncData ({ app }) {
+  //   let { data } = await tkAxios.get("/api/users/getUser");
+  //   console.log(data)
+  //   // return{
+  //   //     name:data.data.name
+  //   // }
+  // },
+  mounted () {
+
+    tkAxios.get("/api/api/users/getUser").then(res => {
+      console.log(888, sessionStorage.getItem('user_token'))
+      console.log(123)
+    });
+
+    // return{
+    //     name:data.data.name
+    // }
+  }
 };
 </script>
 

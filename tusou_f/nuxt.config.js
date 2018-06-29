@@ -4,8 +4,7 @@ module.exports = {
    */
   head: {
     title: '兔砸的窝',
-    meta: [
-      {
+    meta: [{
         charset: 'utf-8'
       },
       {
@@ -18,13 +17,11 @@ module.exports = {
         content: 'Nuxt.js project'
       }
     ],
-    link: [
-      {
-        rel: 'icon',
-        type: 'image/x-icon',
-        href: '/favicon.ico'
-      }
-    ]
+    link: [{
+      rel: 'icon',
+      type: 'image/x-icon',
+      href: '/favicon.ico'
+    }]
   },
   /*
    ** Customize the progress bar color
@@ -39,7 +36,10 @@ module.exports = {
     /*
      ** Run ESLint on save
      */
-    extend(config, { isDev, isClient }) {
+    extend(config, {
+      isDev,
+      isClient
+    }) {
       if (isDev && isClient) {
         config.module.rules.push({
           enforce: 'pre',
@@ -51,23 +51,17 @@ module.exports = {
     },
     vendor: ['element-ui', 'axios']
   },
-  plugins: [
-    {
-      src: '~plugins/ElementUI',
-      ssr: true
-    },
-    {
-      src: '~plugins/axios',
-      ssr: true
-    }
-  ],
+  plugins: [{
+    src: '~plugins/ElementUI',
+    ssr: true
+  }],
   css: [
     // 项目中的 CSS 文件
     '~assets/css/reset.css',
     'element-ui/lib/theme-chalk/index.css',
     '~assets/css/my_element.css'
   ],
-  modules: ['@nuxtjs/axios'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/proxy'],
   axios: {
     prefix: '/api/',
     proxy: true

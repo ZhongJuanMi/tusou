@@ -7,11 +7,10 @@ const verify = util.promisify(jwt.verify) // 解密
 const secret = 'jwt demo'
 const database = config.database
 
-var sequelize = new Sequelize(
+let sequelize = new Sequelize(
   database.DATABASE,
   database.USERNAME,
-  database.PASSWORD,
-  {
+  database.PASSWORD, {
     host: database.HOST,
     dialect: 'mysql',
     pool: {
@@ -47,8 +46,8 @@ const User = sequelize.define('user', {
 
 // 校验用户是否已经注册
 exports.ifUser = async (ctx, next) => {
-  var name = ctx.query.name
-  var result = await User.findOne({
+  let name = ctx.query.name
+  let result = await User.findOne({
     where: {
       name
     }
@@ -57,11 +56,25 @@ exports.ifUser = async (ctx, next) => {
     has: result ? true : false
   }
 }
+// 生成token
+function createToken(name) {
+  let userToken = {
+    date: new Date(),
+    name
+  }
+  const token = jwt.sign(userToken, secret, {
+    expiresIn: '1h'
+  }) //token签名 有效期为1小时
 
+  return token;
+}
 //用户登录
 exports.logUser = async (ctx, next) => {
-  var { name, password } = ctx.request.body
-  var result = await User.findOne({
+  let {
+    name,
+    password
+  } = ctx.request.body
+  let result = await User.findOne({
     where: {
       name,
       password
@@ -69,22 +82,15 @@ exports.logUser = async (ctx, next) => {
   })
   // 生成token
   if (result) {
-    let userToken = {
-      name: name
-    }
-    const token = jwt.sign(userToken, secret, {
-      expiresIn: '1h'
-    }) //token签名 有效期为1小时
+    const token = createToken(name)
     // 加入token
-    await User.update(
-      { token },
-      {
-        where: {
-          name
-        }
+    await User.update({
+      token
+    }, {
+      where: {
+        name
       }
-    )
-    console.log(999, token)
+    })
     ctx.body = {
       token,
       has: true
@@ -98,9 +104,34 @@ exports.logUser = async (ctx, next) => {
 
 //用户注册
 exports.registerUser = async (ctx, next) => {
-  var { name, password } = ctx.request.body
-  await User.create({
+  let {
     name,
     password
+  } = ctx.request.body
+  const token = createToken(name)
+  await User.create({
+    name,
+    password,
+    token
   })
+  ctx.body = {
+    token,
+    has: true
+  }
+}
+
+// 获取用户信息
+exports.getUser = async (ctx, next) => {
+  console.log(111, ctx.header)
+  // let token = ctx.header.token
+  // console.log(222, result)
+  // let result = await User.findOne({
+  //   where: {
+  //     token
+  //   }
+  // })
+  // console.log(333, result)
+  ctx.body = {
+    name: '兔砸'
+  }
 }

@@ -105,9 +105,11 @@ export default {
           this.$axios.post("/api/users/registerUser", {
             name: this.regForm.nickName,
             password: this.regForm.pass
+          }).then(res => {
+            sessionStorage.setItem("user_token", res.data.data.token)
+            this.$router.push(-1);
           })
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
