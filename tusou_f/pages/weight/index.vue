@@ -19,6 +19,7 @@
 </template>
 <script>
 import zjChart from '~/components/weight/chart'
+import tkAxios from '~/plugins/tkAxios'
 export default {
   data () {
     return {
@@ -29,30 +30,35 @@ export default {
   },
   components: {
     zjChart
+  },
+  beforeMount () {
+    tkAxios.get('/api/api/users/getUser').then(res => {
+      console.log(789, res)
+    })
   }
 }
 </script>
 <style lang="scss" scoped>
 .weight {
-    width: 100%;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.9);
-    display: table;
-    &_c {
-        text-align: center;
-        display: table-cell;
-        vertical-align: middle;
-        &n {
-            font-size: 20px;
-            color: aliceblue;
-        }
-        &b {
-            margin-top: 40px;
-            > * {
-                margin: 0 15px;
-            }
-        }
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  display: table;
+  &_c {
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    &n {
+      font-size: 20px;
+      color: aliceblue;
     }
+    &b {
+      margin-top: 40px;
+      > * {
+        margin: 0 15px;
+      }
+    }
+  }
 }
 </style>
 
