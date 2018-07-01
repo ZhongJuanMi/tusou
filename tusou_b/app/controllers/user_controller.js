@@ -30,6 +30,16 @@ const User = sequelize.define('user', {
 
   token: {
     type: Sequelize.STRING
+  },
+  height: {
+    type: Sequelize.STRING
+  },
+  idealWeight: {
+    type: Sequelize.STRING
+  },
+  gender: {
+    type: Sequelize.STRING,
+    defaultValue: "female"
   }
 })
 
@@ -122,16 +132,56 @@ exports.registerUser = async (ctx, next) => {
 
 // 获取用户信息
 exports.getUser = async (ctx, next) => {
-  console.log(111, ctx.header)
-  // let token = ctx.header.token
-  // console.log(222, result)
-  // let result = await User.findOne({
-  //   where: {
-  //     token
-  //   }
-  // })
-  // console.log(333, result)
+  let token = ctx.header.authorization
+  let result = await User.findOne({
+    where: {
+      token
+    }
+  })
+  if (result) {
+    let {
+      name,
+      height,
+      age,
+      gender,
+      idealWeight
+    } = result.dataValues
+    ctx.body = {
+      has: true,
+      userInfo: {
+        name,
+        height,
+        age,
+        gender,
+        idealWeight
+      }
+
+    }
+  } else {
+    ctx.body = {
+      has: false
+    }
+  }
+}
+
+// 设置用户信息
+exports.setInfo = async (ctx, next) => {
+  let {
+    height,
+    idealWeight,
+    gender
+  } = ctx.request.body
+  console.log(height, 222)
+  await User.update({
+    height,
+    idealWeight,
+    gender
+  }, {
+    where: {
+      token: ctx.header.authorization
+    }
+  })
   ctx.body = {
-    name: '兔砸'
+
   }
 }

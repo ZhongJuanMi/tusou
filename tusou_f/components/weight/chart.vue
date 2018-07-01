@@ -11,6 +11,10 @@ export default {
   },
   methods: {
     draw () {
+      // 目标体重
+      // 标准体重
+      let { idealWeight, height } = this.$store.state.userInfo
+      let normalWeight = parseInt(22 * height * height * 0.0001);
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById('chartBox'))
       // 绘制图表
@@ -53,19 +57,19 @@ export default {
           type: 'inside'
         }],
         visualMap: {
-          top: 10,
-          right: 10,
+          top: 0,
+          right: 0,
           pieces: [{
             gt: 0,
-            lte: 48,
-            color: '#096'
+            lte: idealWeight,
+            color: 'aqua'
           }, {
-            gt: 48,
-            lte: 55,
+            gt: idealWeight,
+            lte: normalWeight,
             color: '#ffde33'
           }, {
-            gt: 55,
-            color: '#f00'
+            gt: normalWeight,
+            color: '#f56c6c'
           }]
         },
         series: {
@@ -78,9 +82,23 @@ export default {
           markLine: {
             silent: true,
             data: [{
-              yAxis: 48
+              yAxis: idealWeight,
+              label: {
+                position: 'middle',
+                formatter: '目标体重'
+              },
+              lineStyle: {
+                color: 'aqua'
+              }
             }, {
-              yAxis: 55
+              yAxis: normalWeight,
+              label: {
+                position: 'middle',
+                formatter: '标准体重'
+              },
+              lineStyle: {
+                color: '#ffde33'
+              }
             }]
           }
         }
@@ -93,8 +111,7 @@ export default {
 <style lang="scss" scoped>
 #chartBox {
     width: 800px;
-    margin: auto;
-    height: 400px;
+    height: 360px;
 }
 </style>
 

@@ -34,7 +34,7 @@
 
 </template>
 <script>
-import tkAxios from '~/plugins/tkAxios'
+// import tkAxios from '~/plugins/tkAxios'
 // console.log('000', tkAxios)
 export default {
   // async asyncData ({ app }) {
@@ -45,12 +45,9 @@ export default {
   //   // }
   // },
   mounted () {
-
-    tkAxios.get("/api/api/users/getUser").then(res => {
-      console.log(888, sessionStorage.getItem('user_token'))
-      console.log(123)
-    });
-
+    this.$store.commit('setCurPageIndex', {
+      curPageIndex: 0
+    })
     // return{
     //     name:data.data.name
     // }

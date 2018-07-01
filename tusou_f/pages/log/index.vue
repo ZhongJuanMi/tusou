@@ -36,7 +36,11 @@
     
 <script>
 export default {
-  layout: 'common',
+  mounted () {
+    this.$store.commit('setCurPageIndex', {
+      curPageIndex: 2
+    })
+  },
   data () {
     return {
       logForm: {
@@ -58,20 +62,23 @@ export default {
   },
   methods: {
     submitForm (formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
           this.$axios.post("/api/users/logUser", {
             name: this.logForm.nickName,
             password: this.logForm.pass
           }).then(res => {
             if (res.data.data.has) {
-              sessionStorage.setItem("user_token", res.data.data.token)
-              this.$router.push(-1);
+              this.$cookie.set('user_token', res.data.data.token, 1);
+              this.$tkAxios.get("/api/users/getUser").then(res => {
+                this.$store.commit('setUserInfo', { userInfo: res.data.data.userInfo })
+                this.$router.go(-1)
+              })
+
             } else {
-              this.$message.error('登录账户或密码错误,请重试！');
+              this.$message.error('登录账户或密码错误,请重试！')
             }
           })
-
         } else {
           return false;
         }

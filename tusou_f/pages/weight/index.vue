@@ -1,64 +1,78 @@
 <template>
   <div class="weight">
     <div class="weight_c">
-      <div class="weight_cn">
-        <p v-if="state==0">小游客，请先点击右上角注册或登录哦~</p>
-        <p v-if="state==1&&weight.length==0">{{name}},您还木有记录过体重，开始记录吧！</p>
-      </div>
+
       <div class="weight_cb">
         <el-button v-if="state==1"
                    type="warning"
-                   round>个人信息</el-button>
+                   round
+                   @click="dialogFormVisible=true">个人信息</el-button>
         <el-button v-if="state==1"
                    type="danger"
                    round>记录体重</el-button>
       </div>
       <zjChart />
+      <zjDialog :dialogFormVisible="dialogFormVisible"
+                @closeForm="dialogFormVisible=false" />
     </div>
   </div>
 </template>
 <script>
 import zjChart from '~/components/weight/chart'
-import tkAxios from '~/plugins/tkAxios'
+import zjDialog from '~/components/weight/dialog'
 export default {
   data () {
     return {
       name: '123',
       state: 1,
-      weight: []
+      weight: [],
+      dialogFormVisible: false
     }
   },
   components: {
-    zjChart
+    zjChart,
+    zjDialog
   },
   beforeMount () {
-    tkAxios.get('/api/api/users/getUser').then(res => {
-      console.log(789, res)
-    })
+    if (this.$store.state.userInfo.name) {
+      this.$store.commit('setCurPageIndex', {
+        curPageIndex: 1
+      })
+    } else {
+      this.$message({
+        message: '请先登录哦~',
+        type: 'warning'
+      });
+      this.$router.push('/log')
+    }
+
   }
 }
 </script>
 <style lang="scss" scoped>
 .weight {
-  width: 100%;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.9);
-  display: table;
-  &_c {
-    text-align: center;
-    display: table-cell;
-    vertical-align: middle;
-    &n {
-      font-size: 20px;
-      color: aliceblue;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    &_c {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        margin: 40px auto 0;
+        &n {
+            font-size: 20px;
+            color: aliceblue;
+        }
+        &b {
+            width: 100px;
+            height: 250px;
+        }
     }
-    &b {
-      margin-top: 40px;
-      > * {
-        margin: 0 15px;
-      }
-    }
-  }
 }
 </style>
 

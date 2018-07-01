@@ -42,7 +42,11 @@
     
 <script>
 export default {
-  layout: 'common',
+  mounted () {
+    this.$store.commit('setCurPageIndex', {
+      curPageIndex: 3
+    })
+  },
   data () {
     var validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -64,9 +68,7 @@ export default {
       }
     };
     var validateName = (rule, value, callback) => {
-      this.$axios.get("/api/users/ifUser", {        params: {
-          name: this.regForm.nickName
-        }      }).then(res => {
+      this.$axios.get("/api/users/ifUser", { params: { name: this.regForm.nickName } }).then(res => {
         if (res.data.data.has) {
           callback(new Error("此账户已注册过"))
         } else {
@@ -106,8 +108,11 @@ export default {
             name: this.regForm.nickName,
             password: this.regForm.pass
           }).then(res => {
-            sessionStorage.setItem("user_token", res.data.data.token)
-            this.$router.push(-1);
+            this.$cookie.set('user_token', res.data.data.token, 1);
+            this.$tkAxios.get("/api/users/getUser").then(res => {
+              this.$store.commit('setUserInfo', { userInfo: res.data.data.userInfo })
+              this.$router.go(-1)
+            })
           })
         } else {
           return false;
