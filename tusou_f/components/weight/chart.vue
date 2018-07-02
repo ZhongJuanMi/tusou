@@ -13,7 +13,10 @@ export default {
     draw () {
       // 目标体重
       // 标准体重
-      let { idealWeight, height } = this.$store.state.userInfo
+      let userInfo = this.$store.state.userInfo
+      let idealWeight = userInfo.idealWeight ? userInfo.idealWeight : 0
+      let height = userInfo.height ? userInfo.height : 0
+      console.log(idealWeight, height)
       let normalWeight = parseInt(22 * height * height * 0.0001);
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById('chartBox'))
@@ -56,22 +59,22 @@ export default {
         }, {
           type: 'inside'
         }],
-        visualMap: {
-          top: 0,
-          right: 0,
-          pieces: [{
-            gt: 0,
-            lte: idealWeight,
-            color: 'aqua'
-          }, {
-            gt: idealWeight,
-            lte: normalWeight,
-            color: '#ffde33'
-          }, {
-            gt: normalWeight,
-            color: '#f56c6c'
-          }]
-        },
+        // visualMap: {
+        //   top: 0,
+        //   right: 0,
+        //   pieces: [{
+        //     gt: 0,
+        //     lte: idealWeight,
+        //     color: 'aqua'
+        //   }, {
+        //     gt: idealWeight,
+        //     lte: normalWeight,
+        //     color: '#ffde33'
+        //   }, {
+        //     gt: normalWeight,
+        //     color: '#f56c6c'
+        //   }]
+        // },
         series: {
           name: '早晨',
           type: 'line',
@@ -110,8 +113,8 @@ export default {
 
 <style lang="scss" scoped>
 #chartBox {
-  width: 800px;
-  height: 360px;
+    width: 800px;
+    height: 360px;
 }
 </style>
 

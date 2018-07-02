@@ -70,11 +70,8 @@ export default {
           }).then(res => {
             if (res.data.data.has) {
               this.$cookie.set('user_token', res.data.data.token, 1);
-              this.$tkAxios.get("/api/users/getUser").then(res => {
-                this.$store.commit('setUserInfo', { userInfo: res.data.data.userInfo })
-                this.$router.go(-1)
-              })
-
+              this.$store.commit('setUserInfo', { userInfo: res.data.data.userInfo })
+              this.$router.go(-1)
             } else {
               this.$message.error('登录账户或密码错误,请重试！')
             }

@@ -16,6 +16,7 @@ tkAxios.interceptors.request.use(
 )
 tkAxios.interceptors.response.use(
   response => {
+    console.log(response)
     return response
   },
   error => {

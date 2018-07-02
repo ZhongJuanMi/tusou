@@ -5,8 +5,7 @@ const database = config.database
 exports.sequelize = new Sequelize(
   database.DATABASE,
   database.USERNAME,
-  database.PASSWORD,
-  {
+  database.PASSWORD, {
     host: database.HOST,
     dialect: 'mysql',
     pool: {
@@ -51,6 +50,15 @@ exports.Weight = this.sequelize.define('weight', {
     }
   },
   weight: {
+    type: Sequelize.STRING
+  },
+  date: {
+    type: Sequelize.STRING
+  },
+  time: {
+    type: Sequelize.STRING
+  },
+  AP: {
     type: Sequelize.STRING
   }
 })

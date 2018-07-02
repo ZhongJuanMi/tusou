@@ -109,10 +109,8 @@ export default {
             password: this.regForm.pass
           }).then(res => {
             this.$cookie.set('user_token', res.data.data.token, 1);
-            this.$tkAxios.get("/api/users/getUser").then(res => {
-              this.$store.commit('setUserInfo', { userInfo: res.data.data.userInfo })
-              this.$router.go(-1)
-            })
+            this.$store.commit('setUserInfo', { userInfo: res.data.data.userInfo })
+            this.$router.go(-1)
           })
         } else {
           return false;

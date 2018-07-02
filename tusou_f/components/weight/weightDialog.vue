@@ -15,7 +15,6 @@
                         align="center"
                         type="datetime"
                         format="yyyy-MM-dd HH:mm"
-                        value-format="yyyy-MM-dd HH:mm}"
                         :picker-options="pickerOptions">
         </el-date-picker>
       </el-form-item>
@@ -37,6 +36,14 @@
   </el-dialog>
 </template>
 <script>
+// 重写Date原型方法
+Date.prototype.toString = function () {
+  return this.getFullYear()
+    + "-" + (this.getMonth() > 8 ? (this.getMonth() + 1) : "0" + (this.getMonth() + 1))
+    + "-" + (this.getDate() > 9 ? this.getDate() : "0" + this.getDate())
+    + " " + (this.getHours() > 9 ? this.getHours() : "0" + this.getHours())
+    + ":" + (this.getMinutes() > 9 ? this.getMinutes() : "0" + this.getMinutes());
+}
 export default {
   mounted () {
     this.initForm()
@@ -46,10 +53,10 @@ export default {
   },
   data () {
     var validateIdealWeight = (rule, value, callback) => {
-      if (!Number.isInteger(value)) {
+      if (!Number(value)) {
         callback(new Error('请输入数字值'));
       } else {
-        if (value > 100) {
+        if (value > 100 || value < 40) {
           callback(new Error('请输入真实的体重值'));
         } else {
           callback();
@@ -110,13 +117,17 @@ export default {
     submit () {
       this.$refs.weightForm.validate(valid => {
         if (valid) {
+          let { datetime, weight } = this.form;
+          datetime = datetime.toString()
           // 提交个人信息到后台
-          // this.$tkAxios.post('/api/weight/setWeight',
-          //   this.form
-          // ).then(() => {
-          //   this.cancle()
-          // })
-          console.log(this.form)
+          this.$tkAxios.post('/api/weight/setWeight',
+            {
+              datetime,
+              weight
+            }
+          ).then(() => {
+            this.cancle()
+          })
         } else {
           return false;
         }

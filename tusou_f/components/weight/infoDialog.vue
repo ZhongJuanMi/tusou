@@ -55,10 +55,10 @@ export default {
   },
   data () {
     var validateHeight = (rule, value, callback) => {
-      if (!Number.isInteger(value)) {
+      if (!Number(value)) {
         callback(new Error('请输入数字值'));
       } else {
-        if (value > 200) {
+        if (value > 200 || value < 100) {
           callback(new Error('请输入真实的身高值'));
         } else {
           callback();
@@ -66,10 +66,10 @@ export default {
       }
     }
     var validateIdealWeight = (rule, value, callback) => {
-      if (!Number.isInteger(value)) {
+      if (!Number(value)) {
         callback(new Error('请输入数字值'));
       } else {
-        if (value > 100) {
+        if (value > 100 || value < 40) {
           callback(new Error('请输入真实的体重值'));
         } else {
           callback();

@@ -1,4 +1,7 @@
-const { sequelize, User } = require('./database')
+const {
+  sequelize,
+  User
+} = require('./database')
 const jwt = require('jsonwebtoken')
 const jwtKoa = require('koa-jwt')
 const util = require('util')
@@ -21,7 +24,8 @@ exports.ifUser = async (ctx, next) => {
 function createToken(name) {
   let userToken = {
     date: new Date(),
-    name
+    name,
+    num: Math.random() * 10
   }
   const token = jwt.sign(userToken, secret, {
     expiresIn: '1h'
@@ -29,30 +33,44 @@ function createToken(name) {
 
   return token
 }
-//用户登录
+//用户登录,返回has、token及用户信息
 exports.logUser = async (ctx, next) => {
-  let { name, password } = ctx.request.body
-  let result = await User.findOne({
+  let {
+    name,
+    password
+  } = ctx.request.body
+  let user = await User.findOne({
     where: {
       name,
       password
     }
   })
   // 生成token
-  if (result) {
+  if (user) {
     const token = createToken(name)
     // 加入token
-    await User.update(
-      {
-        token
-      },
-      {
-        where: {
-          name
-        }
+    await User.update({
+      token
+    }, {
+      where: {
+        name
       }
-    )
+    })
+    let {
+      name,
+      height,
+      age,
+      gender,
+      idealWeight
+    } = result.dataValues
     ctx.body = {
+      userInfo: {
+        name,
+        height,
+        age,
+        gender,
+        idealWeight
+      },
       token,
       has: true
     }
@@ -63,9 +81,12 @@ exports.logUser = async (ctx, next) => {
   }
 }
 
-//用户注册
+//用户注册,返回token及用户名
 exports.registerUser = async (ctx, next) => {
-  let { name, password } = ctx.request.body
+  let {
+    name,
+    password
+  } = ctx.request.body
   const token = createToken(name)
   await User.create({
     name,
@@ -74,20 +95,29 @@ exports.registerUser = async (ctx, next) => {
   })
   ctx.body = {
     token,
-    has: true
+    userInfo: {
+      name
+    }
   }
 }
 
 // 获取用户信息
 exports.getUser = async (ctx, next) => {
+  // let user = this.verifyToken(ctx, next)
   let token = ctx.header.authorization
-  let result = await User.findOne({
+  let user = await User.findOne({
     where: {
       token
     }
   })
-  if (result) {
-    let { name, height, age, gender, idealWeight } = result.dataValues
+  if (user) {
+    let {
+      name,
+      height,
+      age,
+      gender,
+      idealWeight
+    } = user
     ctx.body = {
       has: true,
       userInfo: {
@@ -107,19 +137,42 @@ exports.getUser = async (ctx, next) => {
 
 // 设置用户信息
 exports.setInfo = async (ctx, next) => {
-  let { height, idealWeight, gender } = ctx.request.body
-  console.log(height, 222)
-  await User.update(
-    {
+  let {
+    height,
+    idealWeight,
+    gender
+  } = ctx.request.body
+  let token = ctx.header.authorization
+  let user = await User.findOne({
+    where: {
+      token
+    }
+  })
+  if (user) {
+    await User.update({
       height,
       idealWeight,
       gender
-    },
-    {
+    }, {
       where: {
         token: ctx.header.authorization
       }
+    })
+  } else {
+    ctx.body = {
+      has: false
     }
-  )
-  ctx.body = {}
+  }
+}
+
+// 验证token
+exports.verifyToken = async (ctx, next) => {
+  let token = ctx.header.authorization
+  let user = await User.findOne({
+    where: {
+      token
+    }
+  })
+  console.log(9090, user)
+  return user
 }

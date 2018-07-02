@@ -37,7 +37,7 @@ export default {
         }]
     }
   },
-  mounted () {
+  beforeMount () {
     // 获取用户是否携带有效token
     this.getUser()
   },
