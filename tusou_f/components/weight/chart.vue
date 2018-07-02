@@ -110,8 +110,8 @@ export default {
 
 <style lang="scss" scoped>
 #chartBox {
-    width: 800px;
-    height: 360px;
+  width: 800px;
+  height: 360px;
 }
 </style>
 

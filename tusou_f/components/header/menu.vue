@@ -55,46 +55,48 @@ export default {
 
 <style lang="scss" scoped>
 .menu {
-    font-size: 14px;
-    color: #fff;
-    width: 120px;
-    text-align: center;
-    background: transparent;
-    border-radius: 10px;
-    line-height: 40px;
-    padding: 10px 0;
-    overflow: hidden;
+  font-size: 14px;
+  color: #fff;
+  width: 120px;
+  text-align: center;
+  background: transparent;
+  border-radius: 10px;
+  line-height: 40px;
+  padding: 10px 0;
+  overflow: hidden;
+  transition: all 0.4s;
+  position: relative;
+  top: -20px;
+  &_title {
+    cursor: default;
     transition: all 0.4s;
-    &_title {
-        cursor: default;
-        transition: all 0.4s;
+  }
+  &.show {
+    background: rgba(#fff, 0.3);
+    .menu_title {
+      color: aqua;
     }
-    &.show {
-        background: rgba(#fff, 0.3);
-        .menu_title {
-            color: aqua;
-        }
-        .menu_list {
-            opacity: 1;
-            height: 160px;
-        }
+    .menu_list {
+      opacity: 1;
+      height: 160px;
     }
-    &_list {
-        opacity: 0;
-        height: 0;
-        transition: all 0.4s;
+  }
+  &_list {
+    opacity: 0;
+    height: 0;
+    transition: all 0.4s;
+  }
+  li {
+    &:not(.on):hover {
+      color: aqua;
+      cursor: pointer;
     }
-    li {
-        &:not(.on):hover {
-            color: aqua;
-            cursor: pointer;
-        }
-        &.on {
-            cursor: default;
-            color: aqua;
-            background-color: rgba(#fff, 0.2);
-        }
+    &.on {
+      cursor: default;
+      color: aqua;
+      background-color: rgba(#fff, 0.2);
     }
+  }
 }
 </style>
 

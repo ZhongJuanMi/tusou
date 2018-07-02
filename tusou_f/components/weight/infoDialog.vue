@@ -1,15 +1,15 @@
 <template>
-  <el-dialog :title="$store.state.userInfo.name"
-             :visible.sync="dialogFormVisible"
+  <el-dialog :title="$store.state.userInfo.name+'的个人信息'"
+             :visible="value"
              :show-close="false"
-             class="weight"
+             class="weight_info"
              width="460px"
-             :modal-append-to-body="false"
-             :center="true">
+             center>
     <el-form :model="form"
              :rules="infoRules"
              ref="infoForm">
       <el-form-item label="性别"
+                    prop="gender"
                     :label-width="formLabelWidth">
         <el-select v-model="form.gender">
           <el-option label="我是铝孩纸"
@@ -48,7 +48,7 @@
 <script>
 export default {
   props: {
-    dialogFormVisible: Boolean
+    value: Boolean
   },
   mounted () {
     this.initForm()
@@ -80,6 +80,9 @@ export default {
       form: {},
       formLabelWidth: '90px',
       infoRules: {
+        gender: [{
+          required: true, message: "请选择性别信息", trigger: "change"
+        }],
         height: [
           { required: true, message: "请输入身高信息", trigger: "blur" },
           { validator: validateHeight, trigger: 'blur' }
@@ -100,7 +103,7 @@ export default {
       }
     },
     cancle () {
-      this.$emit('closeForm')
+      this.$emit('input', false)
       this.initForm()
       this.$refs.infoForm.clearValidate()
     },
