@@ -42,11 +42,6 @@
     
 <script>
 export default {
-  mounted () {
-    this.$store.commit('setCurPageIndex', {
-      curPageIndex: 3
-    })
-  },
   data () {
     var validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -108,7 +103,7 @@ export default {
             name: this.regForm.nickName,
             password: this.regForm.pass
           }).then(res => {
-            this.$cookie.set('user_token', res.data.data.token, 1);
+            this.$cookie.set('user_token', res.data.data.token, 7);
             this.$store.commit('setUserInfo', { userInfo: res.data.data.userInfo })
             this.$router.go(-1)
           })

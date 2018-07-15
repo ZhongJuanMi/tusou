@@ -78,5 +78,10 @@ module.exports = {
         '^/api/': '/'
       }
     }
+  },
+  router: {
+    base: '/',
+    fallback: true,
+    middleware: 'auth'
   }
 }

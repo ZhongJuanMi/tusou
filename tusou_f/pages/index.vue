@@ -34,24 +34,7 @@
 
 </template>
 <script>
-// import tkAxios from '~/plugins/tkAxios'
-// console.log('000', tkAxios)
 export default {
-  // async asyncData ({ app }) {
-  //   let { data } = await tkAxios.get("/api/users/getUser");
-  //   console.log(data)
-  //   // return{
-  //   //     name:data.data.name
-  //   // }
-  // },
-  mounted () {
-    this.$store.commit('setCurPageIndex', {
-      curPageIndex: 0
-    })
-    // return{
-    //     name:data.data.name
-    // }
-  }
 };
 </script>
 

@@ -24,9 +24,6 @@ exports.User = this.sequelize.define('user', {
     type: Sequelize.STRING
   },
 
-  token: {
-    type: Sequelize.STRING
-  },
   height: {
     type: Sequelize.STRING
   },
@@ -35,7 +32,6 @@ exports.User = this.sequelize.define('user', {
   },
   gender: {
     type: Sequelize.STRING,
-    defaultValue: 'female'
   }
 })
 // 体重信息表
@@ -43,7 +39,7 @@ exports.Weight = this.sequelize.define('weight', {
   userId: {
     type: Sequelize.INTEGER,
     field: 'user_id',
-    unique: true,
+    unique: false,
     references: {
       model: 'User',
       key: 'id'

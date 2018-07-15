@@ -37,19 +37,7 @@ export default {
         }]
     }
   },
-  beforeMount () {
-    // 获取用户是否携带有效token
-    this.getUser()
-  },
   methods: {
-    // 获取用户是否携带有效token
-    getUser () {
-      this.$tkAxios.get("/api/users/getUser").then(({ data }) => {
-        if (data.data.has) {
-          this.$store.commit('setUserInfo', { userInfo: data.data.userInfo })
-        }
-      })
-    },
     // 退出登录
     outLog () {
       this.$cookie.delete('user_token')

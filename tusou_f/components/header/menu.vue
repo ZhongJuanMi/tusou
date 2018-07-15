@@ -35,7 +35,14 @@ export default {
   },
   computed: {
     curPageIndex () {
-      return this.$store.state.curPageIndex
+      let index = 0
+      let path = this.$route.fullPath
+      for (let i in this.nav) {
+        if (this.nav[i].link == path) {
+          index = i
+        }
+      }
+      return index
     }
   },
   methods: {
@@ -43,10 +50,7 @@ export default {
       if (index == this.curPageIndex) {
         return false
       } else {
-        this.$router.push(link);
-        this.$store.commit('setCurPageIndex', {
-          curPageIndex: index
-        })
+        this.$router.push(link)
       }
     }
   }
@@ -55,48 +59,48 @@ export default {
 
 <style lang="scss" scoped>
 .menu {
-  font-size: 14px;
-  color: #fff;
-  width: 120px;
-  text-align: center;
-  background: transparent;
-  border-radius: 10px;
-  line-height: 40px;
-  padding: 10px 0;
-  overflow: hidden;
-  transition: all 0.4s;
-  position: relative;
-  top: -20px;
-  &_title {
-    cursor: default;
+    font-size: 14px;
+    color: #fff;
+    width: 120px;
+    text-align: center;
+    background: transparent;
+    border-radius: 10px;
+    line-height: 40px;
+    padding: 10px 0;
+    overflow: hidden;
     transition: all 0.4s;
-  }
-  &.show {
-    background: rgba(#fff, 0.3);
-    .menu_title {
-      color: aqua;
+    position: relative;
+    top: -20px;
+    &_title {
+        cursor: default;
+        transition: all 0.4s;
     }
-    .menu_list {
-      opacity: 1;
-      height: 160px;
+    &.show {
+        background: rgba(#fff, 0.3);
+        .menu_title {
+            color: aqua;
+        }
+        .menu_list {
+            opacity: 1;
+            height: 160px;
+        }
     }
-  }
-  &_list {
-    opacity: 0;
-    height: 0;
-    transition: all 0.4s;
-  }
-  li {
-    &:not(.on):hover {
-      color: aqua;
-      cursor: pointer;
+    &_list {
+        opacity: 0;
+        height: 0;
+        transition: all 0.4s;
     }
-    &.on {
-      cursor: default;
-      color: aqua;
-      background-color: rgba(#fff, 0.2);
+    li {
+        &:not(.on):hover {
+            color: aqua;
+            cursor: pointer;
+        }
+        &.on {
+            cursor: default;
+            color: aqua;
+            background-color: rgba(#fff, 0.2);
+        }
     }
-  }
 }
 </style>
 

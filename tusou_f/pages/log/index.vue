@@ -36,11 +36,6 @@
     
 <script>
 export default {
-  mounted () {
-    this.$store.commit('setCurPageIndex', {
-      curPageIndex: 2
-    })
-  },
   data () {
     return {
       logForm: {
@@ -68,8 +63,8 @@ export default {
             name: this.logForm.nickName,
             password: this.logForm.pass
           }).then(res => {
-            if (res.data.data.has) {
-              this.$cookie.set('user_token', res.data.data.token, 1);
+            if (res.data.code == 2000) {
+              this.$cookie.set('user_token', res.data.data.token, 7);
               this.$store.commit('setUserInfo', { userInfo: res.data.data.userInfo })
               this.$router.go(-1)
             } else {

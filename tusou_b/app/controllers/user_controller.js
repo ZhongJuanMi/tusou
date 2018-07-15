@@ -3,10 +3,11 @@ const {
   User
 } = require('./database')
 const jwt = require('jsonwebtoken')
-const jwtKoa = require('koa-jwt')
 const util = require('util')
 const verify = util.promisify(jwt.verify) // 解密
 const secret = 'jwt demo'
+const ApiError = require('../error/ApiError');
+const ApiErrorNames = require('../error/ApiErrorNames');
 
 // 校验用户是否已经注册
 exports.ifUser = async (ctx, next) => {
@@ -21,20 +22,20 @@ exports.ifUser = async (ctx, next) => {
   }
 }
 // 生成token
-function createToken(name) {
+function createToken(name, id) {
   let userToken = {
-    date: new Date(),
     name,
-    num: Math.random() * 10
+    id
   }
   const token = jwt.sign(userToken, secret, {
-    expiresIn: '1h'
-  }) //token签名 有效期为1小时
+    expiresIn: '168h'
+  }) //token签名 有效期为7天
 
   return token
 }
-//用户登录,返回has、token及用户信息
+//用户登录,返回token及用户信息
 exports.logUser = async (ctx, next) => {
+  console.log(123456)
   let {
     name,
     password
@@ -45,39 +46,38 @@ exports.logUser = async (ctx, next) => {
       password
     }
   })
+  console.log(7890, user)
   // 生成token
   if (user) {
-    const token = createToken(name)
-    // 加入token
-    await User.update({
-      token
-    }, {
-      where: {
-        name
-      }
-    })
-    let {
-      name,
-      height,
-      age,
-      gender,
-      idealWeight
-    } = result.dataValues
+    console.log(888, user.name, user.id)
+    const token = createToken(user.name, user.id)
+    console.log(765, user.name, user.height, user.gender, user.idealWeight)
+    // let {
+    //   name,
+    //   height,
+    //   gender,
+    //   idealWeight
+    // } = user
+    // console.log(3444, name, hieght, gender, idealWeight)
+    let userInfo = {
+      name: user.name,
+      height: user.height,
+      gender: user.gender,
+      idealWeight: user.idealWeight
+    }
+    console.log(96555, userInfo)
     ctx.body = {
       userInfo: {
-        name,
-        height,
-        age,
-        gender,
-        idealWeight
+        name: user.name,
+        height: user.height,
+        gender: user.gender,
+        idealWeight: user.idealWeight
       },
-      token,
-      has: true
+      token
     }
   } else {
-    ctx.body = {
-      has: false
-    }
+    console.log(777)
+    throw new ApiError(ApiErrorNames.USER_NOT_LOGIN)
   }
 }
 
@@ -87,51 +87,56 @@ exports.registerUser = async (ctx, next) => {
     name,
     password
   } = ctx.request.body
-  const token = createToken(name)
+  // const token = createToken(name)
   await User.create({
     name,
-    password,
-    token
+    password
   })
-  ctx.body = {
-    token,
-    userInfo: {
-      name
-    }
-  }
+  this.logUser(ctx, next)
 }
 
 // 获取用户信息
 exports.getUser = async (ctx, next) => {
-  // let user = this.verifyToken(ctx, next)
-  let token = ctx.header.authorization
-  let user = await User.findOne({
-    where: {
-      token
-    }
-  })
-  if (user) {
-    let {
-      name,
-      height,
-      age,
-      gender,
-      idealWeight
-    } = user
-    ctx.body = {
-      has: true,
-      userInfo: {
+  let token = ctx.query.token || ctx.header.authorization
+  if (token) {
+    try {
+      let {
         name,
-        height,
-        age,
-        gender,
-        idealWeight
+        id
+      } = await verify(token.split(' ')[1], secret)
+      let user = await User.findOne({
+        where: {
+          id,
+          name
+        }
+      })
+      if (user) {
+        let {
+          name,
+          height,
+          age,
+          gender,
+          idealWeight
+        } = user
+        ctx.body = {
+          has: true,
+          userInfo: {
+            name,
+            height,
+            age,
+            gender,
+            idealWeight
+          }
+        }
+      } else {
+        throw new ApiError(ApiErrorNames.USER_NOT_EXIST);
       }
+
+    } catch (err) {
+      throw new ApiError(ApiErrorNames.TOKEN_EXPIRED_ERROR)
     }
   } else {
-    ctx.body = {
-      has: false
-    }
+    throw new ApiError(ApiErrorNames.USER_NOT_LOGIN)
   }
 }
 
@@ -143,36 +148,36 @@ exports.setInfo = async (ctx, next) => {
     gender
   } = ctx.request.body
   let token = ctx.header.authorization
-  let user = await User.findOne({
-    where: {
-      token
-    }
-  })
-  if (user) {
-    await User.update({
-      height,
-      idealWeight,
-      gender
-    }, {
-      where: {
-        token: ctx.header.authorization
+  if (token) {
+    try {
+      let {
+        name,
+        id
+      } = await verify(token.split(' ')[1], secret)
+      let user = await User.findOne({
+        where: {
+          id,
+          name
+        }
+      })
+      if (user) {
+        await User.update({
+          height,
+          idealWeight,
+          gender
+        }, {
+          where: {
+            id,
+            name
+          }
+        })
+      } else {
+        throw new ApiError(ApiErrorNames.USER_NOT_EXIST)
       }
-    })
+    } catch (err) {
+      throw new ApiError(ApiErrorNames.TOKEN_EXPIRED_ERROR)
+    }
   } else {
-    ctx.body = {
-      has: false
-    }
+    throw new ApiError(ApiErrorNames.USER_NOT_LOGIN)
   }
-}
-
-// 验证token
-exports.verifyToken = async (ctx, next) => {
-  let token = ctx.header.authorization
-  let user = await User.findOne({
-    where: {
-      token
-    }
-  })
-  console.log(9090, user)
-  return user
 }

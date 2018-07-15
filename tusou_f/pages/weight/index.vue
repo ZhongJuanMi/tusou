@@ -3,18 +3,17 @@
     <div class="weight_c">
 
       <div class="weight_cb">
-        <el-button v-if="state==1"
-                   type="warning"
+        <el-button type="warning"
                    round
                    @click="infoDialogVisible=true">个人信息</el-button>
-        <el-button v-if="state==1"
-                   type="danger"
+        <el-button type="danger"
                    round
                    @click="weightDialogVisible=true">记录体重</el-button>
       </div>
-      <zjChart />
+      <zjChart :weights='weights' />
       <zjInfoDialog v-model="infoDialogVisible" />
-      <zjWeightDialog v-model="weightDialogVisible" />
+      <zjWeightDialog v-model="weightDialogVisible"
+                      @refresh='getWeight' />
     </div>
   </div>
 </template>
@@ -25,11 +24,9 @@ import zjWeightDialog from '~/components/weight/weightDialog'
 export default {
   data () {
     return {
-      name: '123',
-      state: 1,
-      weight: [],
       infoDialogVisible: false,
-      weightDialogVisible: false
+      weightDialogVisible: false,
+      weights: []
     }
   },
   components: {
@@ -37,19 +34,24 @@ export default {
     zjInfoDialog,
     zjWeightDialog
   },
-  mounted () {
-    if (this.$store.state.userInfo.name) {
-      this.$store.commit('setCurPageIndex', {
-        curPageIndex: 1
-      })
-    } else {
+  beforeMount () {
+    if (!this.$store.state.userInfo.name) {
       this.$message({
         message: '请先登录哦~',
         type: 'warning'
       });
       this.$router.push('/log')
+    } else {
+      this.getWeight()
     }
-
+  },
+  methods: {
+    getWeight () {
+      this.$tkAxios.get('/api/weights/getWeight').then(({ data }) => {
+        console.log(666, data.data.weights)
+        this.weights = data.data.weights
+      })
+    }
   }
 }
 </script>

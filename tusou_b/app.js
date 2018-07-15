@@ -12,7 +12,13 @@ const index = require('./routes/index')
 const users = require('./routes/users')
 const api = require('./routes/api')
 const response_formatter = require('./middlewares/response_formatter')
-
+const jwtKoa = require('koa-jwt')
+const secret = 'jwt demo'
+// app.use(jwtKoa({
+//   secret
+// }).unless({
+//   path: [/^\/api\/users\/logUser/] //数组中的路径不需要通过jwt验证
+// }))
 // error handler
 onerror(app)
 

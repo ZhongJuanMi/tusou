@@ -38,11 +38,17 @@
 <script>
 // 重写Date原型方法
 Date.prototype.toString = function () {
-  return this.getFullYear()
-    + "-" + (this.getMonth() > 8 ? (this.getMonth() + 1) : "0" + (this.getMonth() + 1))
-    + "-" + (this.getDate() > 9 ? this.getDate() : "0" + this.getDate())
-    + " " + (this.getHours() > 9 ? this.getHours() : "0" + this.getHours())
-    + ":" + (this.getMinutes() > 9 ? this.getMinutes() : "0" + this.getMinutes());
+  return (
+    this.getFullYear() +
+    '-' +
+    (this.getMonth() > 8 ? this.getMonth() + 1 : '0' + (this.getMonth() + 1)) +
+    '-' +
+    (this.getDate() > 9 ? this.getDate() : '0' + this.getDate()) +
+    ' ' +
+    (this.getHours() > 9 ? this.getHours() : '0' + this.getHours()) +
+    ':' +
+    (this.getMinutes() > 9 ? this.getMinutes() : '0' + this.getMinutes())
+  )
 }
 export default {
   mounted () {
@@ -54,12 +60,12 @@ export default {
   data () {
     var validateIdealWeight = (rule, value, callback) => {
       if (!Number(value)) {
-        callback(new Error('请输入数字值'));
+        callback(new Error('请输入数字值'))
       } else {
         if (value > 100 || value < 40) {
-          callback(new Error('请输入真实的体重值'));
+          callback(new Error('请输入真实的体重值'))
         } else {
-          callback();
+          callback()
         }
       }
     }
@@ -67,28 +73,32 @@ export default {
       formLabelWidth: '90px',
       pickerOptions: {
         disabledDate (time) {
-          return time.getTime() > Date.now();
+          return time.getTime() > Date.now()
         },
-        shortcuts: [{
-          text: '今天',
-          onClick (picker) {
-            picker.$emit('pick', new Date());
+        shortcuts: [
+          {
+            text: '今天',
+            onClick (picker) {
+              picker.$emit('pick', new Date())
+            }
+          },
+          {
+            text: '昨天',
+            onClick (picker) {
+              const date = new Date()
+              date.setTime(date.getTime() - 3600 * 1000 * 24)
+              picker.$emit('pick', date)
+            }
+          },
+          {
+            text: '一周前',
+            onClick (picker) {
+              const date = new Date()
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', date)
+            }
           }
-        }, {
-          text: '昨天',
-          onClick (picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24);
-            picker.$emit('pick', date);
-          }
-        }, {
-          text: '一周前',
-          onClick (picker) {
-            const date = new Date();
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', date);
-          }
-        }]
+        ]
       },
       form: {},
       rules: {
@@ -96,12 +106,11 @@ export default {
           { required: true, message: '请选择日期时间', trigger: 'change' }
         ],
         weight: [
-          { required: true, message: "请输入当前体重值", trigger: "blur" },
+          { required: true, message: '请输入当前体重值', trigger: 'blur' },
           { validator: validateIdealWeight, trigger: 'blur' }
         ]
       }
-
-    };
+    }
   },
   methods: {
     initForm () {
@@ -113,27 +122,28 @@ export default {
     cancle () {
       this.$emit('input', false)
       this.$refs.weightForm.clearValidate()
+      this.initForm()
     },
     submit () {
       this.$refs.weightForm.validate(valid => {
         if (valid) {
-          let { datetime, weight } = this.form;
+          let { datetime, weight } = this.form
           datetime = datetime.toString()
           // 提交个人信息到后台
-          this.$tkAxios.post('/api/weight/setWeight',
-            {
+          this.$tkAxios
+            .post('/api/weights/setWeight', {
               datetime,
               weight
-            }
-          ).then(() => {
-            this.cancle()
-          })
+            })
+            .then(() => {
+              this.$emit('refresh')
+              this.cancle()
+            })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     }
   }
 }
 </script>
-
