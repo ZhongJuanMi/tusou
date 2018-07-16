@@ -10,7 +10,18 @@
                    round
                    @click="weightDialogVisible=true">记录体重</el-button>
       </div>
-      <zjChart :weights='weights' />
+      <div class="weight_ct">
+        <p v-if="!$store.state.userInfo.idealWeight"
+           class="weight_cn">
+          {{$store.state.userInfo.name}} 你还没有设置个人信息哦~ <br>设置后可比对标准体重与目标体重
+        </p>
+        <zjChart :weights='weights'
+                 v-if="weights.length" />
+        <p v-else
+           class="weight_cn">{{$store.state.userInfo.name}} 你还没有记录过体重哦~</p>
+
+      </div>
+
       <zjInfoDialog v-model="infoDialogVisible" />
       <zjWeightDialog v-model="weightDialogVisible"
                       @refresh='getWeight' />
@@ -73,10 +84,18 @@ export default {
         &n {
             font-size: 20px;
             color: aliceblue;
+            margin-left: 50px;
+            margin-bottom: 50px;
+            &:first-child {
+                color: aquamarine;
+            }
         }
         &b {
             width: 100px;
             height: 250px;
+        }
+        &t {
+            min-height: 250px;
         }
     }
 }

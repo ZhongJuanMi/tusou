@@ -2,6 +2,7 @@
   <div id="chartBox">
 
   </div>
+
 </template>
 <script>
 import echarts from 'echarts'
@@ -9,13 +10,12 @@ export default {
   props: {
     weights: Array
   },
-  // data () {
-  //   return {
-  //     weights: []
-  //   }
-  // },
+  data () {
+    return {
+      note: false
+    }
+  },
   mounted () {
-    console.log(222, this.weights)
     if (this.weights.length) {
       this.draw()
     }
@@ -39,6 +39,17 @@ export default {
   computed: {
     userInfo () {
       return this.$store.state.userInfo
+    },
+    weightall () {
+      return this.weights.map(item => {
+        item.AM > item.PM ? item.AM : item.PM
+      }).sort((a, b) => a - b)
+    },
+    min () {
+      return this.weightall[0]
+    },
+    max () {
+      return this.weightall[this.weightall.length - 1]
     }
   },
   methods: {
@@ -69,7 +80,8 @@ export default {
           splitLine: {
             show: false
           },
-          min: 45
+          min: this.min < idealWeight ? this.min : idealWeight,
+          max: this.max > normalWeight ? this.max : normalWeight
         },
         toolbox: {
           left: 'center',
@@ -89,22 +101,22 @@ export default {
             type: 'inside'
           }
         ],
-        // visualMap: {
-        //   top: 0,
-        //   right: 0,
-        //   pieces: [{
-        //     gt: 0,
-        //     lte: idealWeight,
-        //     color: 'aqua'
-        //   }, {
-        //     gt: idealWeight,
-        //     lte: normalWeight,
-        //     color: '#ffde33'
-        //   }, {
-        //     gt: normalWeight,
-        //     color: '#f56c6c'
-        //   }]
-        // },
+        visualMap: {
+          top: 0,
+          right: 0,
+          pieces: idealWeight ? [{
+            gt: 0,
+            lte: idealWeight,
+            color: 'aqua'
+          }, {
+            gt: idealWeight,
+            lte: normalWeight,
+            color: '#ffde33'
+          }, {
+            gt: normalWeight,
+            color: '#f56c6c'
+          }] : []
+        },
         series: [
           {
             name: '早晨',

@@ -80,7 +80,7 @@ exports.getWeight = async (ctx, next) => {
           let amres = res.filter(item => item.AP === 'AM')
           let pmres = res.filter(item => item.AP === 'PM')
           ctx.body = {
-            weights: weightCon(amres, pmres)
+            weights: weightCon(weightPer(amres), weightPer(pmres))
           }
         } else {
           ctx.body = {
@@ -109,14 +109,17 @@ function weightPer(ary) {
         weight: ary[0].weight,
         AP: ary[0].AP
       })
+      console.log(i, temp)
     } else {
       let flag = true
       for (let j in temp) {
         if (ary[i].date == temp[j].date) {
           flag = false
           temp[j].weight = (Number(ary[i].weight) + Number(temp[j].weight)) / 2
+          console.log('j', j, temp)
         }
       }
+      console.log(i, temp)
       if (flag) {
         temp.push({
           date: ary[i].date,
@@ -124,6 +127,7 @@ function weightPer(ary) {
           AP: ary[i].AP
         })
       }
+      console.log(i, temp)
     }
   }
   return temp
@@ -131,13 +135,14 @@ function weightPer(ary) {
 
 function weightCon(ary1, ary2) {
   let ary = [...ary1, ...ary2]
+  console.log(999, ary)
   let temp = []
   for (let i in ary) {
     if (i == 0) {
       temp.push({
         date: ary[0].date,
         AM: ary[0].AP == 'AM' ? ary[0].weight : null,
-        PM: ary[0].PM == 'PM' ? ary[0].weiight : null
+        PM: ary[0].AP == 'PM' ? ary[0].weight : null
       })
     } else {
       let flag = true
@@ -166,5 +171,6 @@ function weightCon(ary1, ary2) {
   temp.sort((a, b) => {
     return (new Date(a.date)).getTime() - (new Date(b.date)).getTime()
   })
+  console.log(123, temp)
   return temp
 }
