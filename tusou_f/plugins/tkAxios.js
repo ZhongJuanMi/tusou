@@ -5,7 +5,6 @@ let options = {}
 
 tkAxios.interceptors.request.use(
   config => {
-    console.log(999, config)
     if (process.client) {
       config.headers.Authorization = `token ${VueCookie.get('user_token')}` //将接口返回的token信息配置到接口请求中
     }
@@ -17,7 +16,6 @@ tkAxios.interceptors.request.use(
 )
 tkAxios.interceptors.response.use(
   response => {
-    console.log(response)
     return response
   },
   error => {

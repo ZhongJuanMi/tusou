@@ -55,7 +55,6 @@ exports.setWeight = async (ctx, next) => {
 exports.getWeight = async (ctx, next) => {
   let token = ctx.header.authorization
   if (token) {
-    console.log(123, token)
     try {
       let {
         name,
@@ -109,17 +108,14 @@ function weightPer(ary) {
         weight: ary[0].weight,
         AP: ary[0].AP
       })
-      console.log(i, temp)
     } else {
       let flag = true
       for (let j in temp) {
         if (ary[i].date == temp[j].date) {
           flag = false
           temp[j].weight = (Number(ary[i].weight) + Number(temp[j].weight)) / 2
-          console.log('j', j, temp)
         }
       }
-      console.log(i, temp)
       if (flag) {
         temp.push({
           date: ary[i].date,
@@ -127,7 +123,6 @@ function weightPer(ary) {
           AP: ary[i].AP
         })
       }
-      console.log(i, temp)
     }
   }
   return temp
@@ -135,7 +130,6 @@ function weightPer(ary) {
 
 function weightCon(ary1, ary2) {
   let ary = [...ary1, ...ary2]
-  console.log(999, ary)
   let temp = []
   for (let i in ary) {
     if (i == 0) {
@@ -171,6 +165,5 @@ function weightCon(ary1, ary2) {
   temp.sort((a, b) => {
     return (new Date(a.date)).getTime() - (new Date(b.date)).getTime()
   })
-  console.log(123, temp)
   return temp
 }

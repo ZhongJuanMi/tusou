@@ -35,7 +35,6 @@ function createToken(name, id) {
 }
 //用户登录,返回token及用户信息
 exports.logUser = async (ctx, next) => {
-  console.log(123456)
   let {
     name,
     password
@@ -46,12 +45,9 @@ exports.logUser = async (ctx, next) => {
       password
     }
   })
-  console.log(7890, user)
   // 生成token
   if (user) {
-    console.log(888, user.name, user.id)
     const token = createToken(user.name, user.id)
-    console.log(765, user.name, user.height, user.gender, user.idealWeight)
     // let {
     //   name,
     //   height,
@@ -65,7 +61,6 @@ exports.logUser = async (ctx, next) => {
       gender: user.gender,
       idealWeight: user.idealWeight
     }
-    console.log(96555, userInfo)
     ctx.body = {
       userInfo: {
         name: user.name,
@@ -76,7 +71,6 @@ exports.logUser = async (ctx, next) => {
       token
     }
   } else {
-    console.log(777)
     throw new ApiError(ApiErrorNames.USER_NOT_LOGIN)
   }
 }

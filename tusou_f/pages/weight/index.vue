@@ -59,7 +59,6 @@ export default {
   methods: {
     getWeight () {
       this.$tkAxios.get('/api/weights/getWeight').then(({ data }) => {
-        console.log(666, data.data.weights)
         this.weights = data.data.weights
       })
     }

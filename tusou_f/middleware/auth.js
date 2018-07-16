@@ -31,7 +31,6 @@ export default function ({
     }).then(({
       data
     }) => {
-      console.log(123, data)
       if (data.code == 2000) {
         store.commit('setUserInfo', {
           userInfo: data.data.userInfo
