@@ -37,7 +37,8 @@ export default {
     return {
       infoDialogVisible: false,
       weightDialogVisible: false,
-      weights: []
+      weights: [],
+      test:''
     }
   },
   components: {
